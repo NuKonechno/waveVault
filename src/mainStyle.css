@@ -1,0 +1,135 @@
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+#bg {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+
+    pointer-events: none;
+    z-index: 0;
+    display: block;
+}
+
+/* main menu */
+
+.mainMenu {
+    position: relative;
+    width: 60vmin;
+    height: 60vmin;
+    z-index: 1;
+}
+
+.mainMenu svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.segment {
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: center;
+    animation: segmentIn 0.5s ease-out forwards;
+}
+
+.segment-inner {
+    transition: transform 0.25s ease;
+    transform-origin: center;
+}
+
+.segment:hover .segment-inner {
+    transform: translate(var(--hx, 0px), var(--hy, 0px));
+}
+
+/* параллакс только картинка */
+.segment-bg {
+    transform: translate(var(--px, 0px), var(--py, 0px));
+    transition: transform 0.1s linear, filter 0.25s ease;
+    will-change: transform;
+}
+
+/* цветовой hover */
+.segment:not(.has-image):hover .segment-bg {
+    filter: brightness(1.2);
+}
+
+.segment.has-image:hover .segment-bg {
+    filter: blur(3px) brightness(0.8);
+}
+
+/* текст */
+.segment-text {
+    pointer-events: none;
+    text-anchor: middle;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
+
+@keyframes segmentIn {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Параллакс SVG меню */
+.radial-svg {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+/* Улучшенные hover эффекты */
+.segment {
+    transition: filter 0.3s ease;
+}
+
+.segment:hover {
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.3));
+}
+
+.segment:active .segment-inner {
+    transform: translate(var(--hx, 0px), var(--hy, 0px)) scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .mainMenu {
+        width: 80vmin;
+        height: 80vmin;
+    }
+    
+    .segment-text {
+        font-size: 12px;
+    }
+}
+
+/* -- main menu */
+
+.scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
