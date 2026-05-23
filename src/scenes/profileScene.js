@@ -1,6 +1,7 @@
 import Scene from "../scene.js";
-import AuthView from "./authView.js";
-import UserProfileView from "./userProfileView.js";
+import AuthView from "../elements/authView.js";
+import UserProfileView from "../elements/userProfileView.js";
+import MainMenuScene from "./mainMenuScene.js";
 
 export default class ProfileScene extends Scene {
     constructor(root, manager) {
@@ -30,15 +31,19 @@ export default class ProfileScene extends Scene {
                 AuthView.clearSession();
                 this.user = null;
                 this.render();
-            });
+            }, () => this.backToMainMenu());
         } else {
             this.child = new AuthView(this.el, (user) => {
                 this.user = user;
                 this.render();
-            });
+            }, () => this.backToMainMenu());
         }
 
         this.child.mount();
+    }
+
+    backToMainMenu() {
+        this.manager.setScene(MainMenuScene);
     }
 
     unmount() {

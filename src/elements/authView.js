@@ -1,10 +1,13 @@
+import createBackButton from "./backButton.js";
+
 const USERS_KEY = "waveVault.users";
 const SESSION_KEY = "waveVault.session";
 
 export default class AuthView {
-    constructor(root, onLoginSuccess) {
+    constructor(root, onLoginSuccess, onBack) {
         this.root = root;
         this.onLoginSuccess = onLoginSuccess;
+        this.onBack = onBack;
         this.el = null;
         this.mode = "login";
     }
@@ -40,6 +43,7 @@ export default class AuthView {
             </div>
 
             <div class="auth-box" aria-live="polite">
+                <div data-back-slot></div>
                 <div class="auth-switch" role="tablist" aria-label="Authorization mode">
                     <button type="button" data-mode="login">Log in</button>
                     <button type="button" data-mode="register">Register</button>
@@ -51,6 +55,7 @@ export default class AuthView {
         `;
 
         this.root.appendChild(this.el);
+        this.el.querySelector("[data-back-slot]").appendChild(createBackButton(this.onBack));
 
         this.bind();
         this.renderForm();
@@ -248,5 +253,3 @@ export default class AuthView {
         };
     }
 }
-
-window.AuthView = AuthView;

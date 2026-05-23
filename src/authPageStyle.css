@@ -109,7 +109,8 @@
 
 .auth-switch button,
 .auth-form button,
-.profile-action {
+.profile-action,
+.scene-back-button {
     min-height: 42px;
     border: 0;
     border-radius: 7px;
@@ -131,7 +132,8 @@
 
 .auth-switch button:active,
 .auth-form button:active,
-.profile-action:active {
+.profile-action:active,
+.scene-back-button:active {
     transform: translateY(1px);
 }
 
@@ -240,6 +242,16 @@
 }
 
 .profile-action:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.scene-back-button {
+    width: 100%;
+    color: #f4f7fb;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.scene-back-button:hover {
     background: rgba(255, 255, 255, 0.16);
 }
 

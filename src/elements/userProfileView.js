@@ -1,8 +1,11 @@
+import createBackButton from "./backButton.js";
+
 export default class UserProfileView {
-    constructor(root, user, onLogout) {
+    constructor(root, user, onLogout, onBack) {
         this.root = root;
         this.user = user || {};
         this.onLogout = onLogout;
+        this.onBack = onBack;
         this.el = null;
     }
 
@@ -17,6 +20,7 @@ export default class UserProfileView {
 
         this.el.innerHTML = `
             <div class="profile-left">
+                <div data-back-slot></div>
                 <div class="avatar">${initial}</div>
                 <div class="nickname">${nickname}</div>
                 <div class="profile-email">${email}</div>
@@ -44,6 +48,7 @@ export default class UserProfileView {
         `;
 
         this.root.appendChild(this.el);
+        this.el.querySelector("[data-back-slot]").appendChild(createBackButton(this.onBack));
 
         this.el.querySelector("[data-logout]").addEventListener("click", () => {
             this.onLogout();
@@ -81,5 +86,3 @@ export default class UserProfileView {
         if (this.el) this.el.remove();
     }
 }
-
-window.UserProfileView = UserProfileView;
