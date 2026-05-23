@@ -1,11 +1,10 @@
 import ProfileScene from "../scenes/profileScene.js";
+import parallax from "../effects/parallax.js";
 
 export default function buildRadialMenu(container, manager) {
     container.innerHTML = "";
 
     const bgImages = [];
-
-    let running = true;
 
     const menuData = [
         {
@@ -56,39 +55,6 @@ export default function buildRadialMenu(container, manager) {
 
     const ctx = { svg, defs, center, size, outerRadius, innerRadius, bgImages, manager };
 
-    // ---------------- PARALLAX ----------------
-    const onMouseMove = (e) => {
-        const mx = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
-        const my = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
-
-        svg.style.transform = `translate(${mx * 8}px, ${my * 8}px)`;
-
-        window._mx = mx;
-        window._my = my;
-    };
-
-    window.addEventListener("mousemove", onMouseMove);
-
-    let rafId = null;
-
-    function parallaxLoop() {
-    if (!running) return;
-
-        const mx = window._mx || 0;
-        const my = window._my || 0;
-
-        const strength = 15;
-
-        bgImages.forEach((img) => {
-            img.style.setProperty("--px", mx * strength);
-            img.style.setProperty("--py", my * strength);
-        });
-
-        rafId = requestAnimationFrame(parallaxLoop);
-    }
-
-    parallaxLoop();
-
     // ---------------- BUILD ----------------
     const angleStep = 360 / menuData.length;
 
@@ -99,13 +65,15 @@ export default function buildRadialMenu(container, manager) {
         createSegment(start, end, item, i, ctx);
     });
 
+    const parallaxCleanup = parallax(container, {
+        strength: 20,
+        children: [
+            
+        ]
+    });
+
     return function destroy() {
-        running = false;
-
-        window.removeEventListener("mousemove", onMouseMove);
-
-        if (rafId) cancelAnimationFrame(rafId);
-
+        parallaxCleanup();
         container.innerHTML = "";
     };
 }
