@@ -10,7 +10,7 @@ export default function buildRadialMenu(container, manager) {
         {
             text: "Music Library",
             color: "#305CDE",
-            image: "./src/assets/menu-library.jpg",
+            image: "./src/assets/menu-library.webp",
             imgScale: 1.2,
             imgOffsetX: 0,
             imgOffsetY: 0,
@@ -25,7 +25,7 @@ export default function buildRadialMenu(container, manager) {
         {
             text: "Profile",
             color: "#2D23B8",
-            image: "./src/assets/menu-profile.jpg",
+            image: "./src/assets/menu-profile.webp",
             imgScale: 0.8,
             imgOffsetX: -20,
             imgOffsetY: -21,
@@ -270,4 +270,17 @@ function fitText(lines, startAngle, endAngle, innerRadius, outerRadius) {
     }
 
     return fontSize;
+}
+
+function preloadImage(src) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            // decode() форсирует декодирование пикселей, а не только загрузку
+            if (img.decode) img.decode().then(() => resolve(img), () => resolve(img));
+            else resolve(img);
+        };
+        img.onerror = () => resolve(null);
+        img.src = src;
+    });
 }

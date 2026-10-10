@@ -1,35 +1,45 @@
 export function parallax(moduleElement, options = {}) {
     const entries = [
         ...createEntries(moduleElement, options, true),
-        ...normalizeChildren(options.children).flatMap((childOptions) => {
-            return createEntries(moduleElement, childOptions, false);
-        })
+        ...normalizeChildren(options.children).flatMap((childOptions) =>
+            createEntries(moduleElement, childOptions, false)
+        )
     ];
 
-    const handleMouseMove = (event) => {
+    let pending = null;
+    let rafId = 0;
+
+    const apply = (event) => {
         const mx = (event.clientX - window.innerWidth / 2) / window.innerWidth;
         const my = (event.clientY - window.innerHeight / 2) / window.innerHeight;
 
-        entries.forEach((entry) => {
+        for (const entry of entries) {
             const x = mx * entry.strengthX;
             const y = my * entry.strengthY;
 
-            if (entry.apply) {
-                entry.apply(entry.element, { x, y, mx, my, event });
-            } else {
-                entry.element.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-            }
-        });
-
-        if (options.onMove) {
-            options.onMove({ mx, my, event });
+            if (entry.apply) entry.apply(entry.element, { x, y, mx, my, event });
+            else entry.element.style.transform = `translate3d(${x}px, ${y}px, 0)`;
         }
+
+        if (options.onMove) options.onMove({ mx, my, event });
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    const handleMouseMove = (event) => {
+        pending = event;
+        if (rafId) return;
+        rafId = requestAnimationFrame(() => {
+            rafId = 0;
+            const e = pending;
+            pending = null;
+            if (e) apply(e);
+        });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
     return function cleanup() {
         window.removeEventListener("mousemove", handleMouseMove);
+        if (rafId) cancelAnimationFrame(rafId);
     };
 }
 
